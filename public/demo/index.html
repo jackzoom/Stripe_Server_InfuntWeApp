@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Stripe Index</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+    <button onclick="alipay(101)">微信支付</button>
+    <button onclick="minipay()">小程序支付</button>
+    <div id="card-element" style="height: 500px;">
+        <!-- 此处挂载节点 -->
+    </div>
+</body>
+<script>
+    var stripe = Stripe('pk_test_1l6of6HXXz2sMXnuPJVD3pnb006LxaGAKS');
+</script>
+<script>
+    function alipay(amount) {
+        stripe.createSource({
+            type: 'wechat',
+            amount: parseInt(amount),
+            currency: 'gbp', // usd, eur,
+            redirect: {
+                return_url: 'https://xxx.eu/pay/result.html'
+            },
+        }).then(function (response) {
+            if (response.error) {
+                debugger
+                alert(response.error.message);
+            } else {
+                debugger
+                processStripeResponse(response.source);
+            }
+        });
+    }
+
+    function processStripeResponse(source) {
+        window.location.href = source.wechat.qr_code_url;
+    }
+</script>
+<script>
+    var elements = stripe.elements();
+    var style = {
+        base: {
+            color: '#32325d',
+            lineHeight: '18px',
+            fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+                color: '#aab7c4'
+            }
+        },
+        invalid: {
+            color: '#fa755a',
+            iconColor: '#fa755a'
+        }
+    };
+    var card = elements.create('card', {
+        style: style
+    });
+    card.mount('#card-element');
+
+    function minipay() {
+        setTimeout(() => {
+            stripe.createToken(card).then(function (result) {
+                if (result.error) {
+                    console.log("error:", result);
+                } else {
+                    // stripeTokenHandler(result.token);
+                    console.log("result:", result);
+                    // Send the token to your server.
+                }
+            });
+        }, 500)
+
+    }
+</script>
+
+</html>
