@@ -13,16 +13,18 @@ const payRouter = require('./routes/pay');
 
 const stripeRouter = require('./routes/stripe');
 
+const paymentRouter = require('./routes/payment');
+
 var app = express();
 app.use(helmet({
     // frameguard: {
     //     action: 'deny'
     // }
 }));
-app.use(helmet.hidePoweredBy({
-    setTo: 'PHP 7.2.0'
-}))
 
+// app.use(helmet.hidePoweredBy({
+//     setTo: 'PHP 7.2.0'
+// }))
 
 
 var logDirectory = __dirname + '/log';
@@ -76,6 +78,7 @@ app.all('*', function (req, res, next) {
 
 app.use('/pay/', payRouter);
 app.use('/decorder/', stripeRouter);
+app.use('/payment/', paymentRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

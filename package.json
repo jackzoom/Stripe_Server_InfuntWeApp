@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "set debug=mypdfapp:*&&set NODE_ENV=development&&supervisor ./bin/www",
+    "prod": "set debug=mypdfapp:*&&set NODE_ENV=production&&supervisor ./bin/www",
     "dev": "node-dev ./bin/www"
   },
   "dependencies": {
